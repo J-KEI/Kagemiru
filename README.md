@@ -13,11 +13,20 @@
   サイトにインストールするプラグイン。導入済みのセキュリティプラグインを検出し、
   アダプタ経由で標準フォーマットに変換してホストへPush送信する。
 
-## ドキュメント
+## ドキュメント運用
 
-- `docs/architecture.md` — アーキテクチャ決定事項(通信方向・認証方式・アダプタ
-  パターン等)
-- `docs/data-schema.md` — クライアント→ホスト間のレポートデータスキーマ
+- `spec/` — **確定した**プロトコル仕様(SSOT)。host/client双方が従うべき
+  通信方向・認証方式・レポートデータスキーマ等を管理する
+- `docs/` — **検討中**の設計課題。Issueでの検討過程で生まれた資料を置き、
+  結論が出たらPRで`spec/`へ反映(昇格)する
+
+プラグイン単体の実装詳細(DBスキーマ・管理画面仕様・アダプタ実装等)は
+各リポジトリ([kagemiru-host](https://github.com/J-KEI/kagemiru-host)
+/ [kagemiru-client](https://github.com/J-KEI/kagemiru-client))の
+`spec/` `docs/` を参照。
+
+- `spec/architecture.md` — 通信方向・認証方式・相互接続性の位置づけ
+- `spec/data-schema.md` — クライアント→ホスト間のレポートデータスキーマ
 
 ## アーキテクチャ概要
 
@@ -26,7 +35,8 @@
   あるため、ホスト側の受信REST APIに影響されない構成。
 - 死活監視のみ **ホスト→サイトへのPull型**。サイトが完全にダウンしている場合
   Push側は動作しないため、外形監視は別ロジックとして分離する。
-- クライアント側は対応セキュリティプラグインごとに「アダプタ」を実装し、
-  対応プラグインを増やす際はアダプタを追加するだけで済む設計。
+- kagemiru-host / kagemiru-client は独立したプロダクトであり、本プロトコルに
+  準拠していれば互いに他実装と組み合わせることも妨げない。「Kagemiru」として
+  相互接続性を保証するのはこの2製品の組み合わせのみ。
 
-詳細は `docs/architecture.md` と `docs/data-schema.md` を参照。
+詳細は `spec/architecture.md` と `spec/data-schema.md` を参照。
