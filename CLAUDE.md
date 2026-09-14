@@ -43,6 +43,36 @@
   「Kagemiru」として保証するのはこの2製品の組み合わせのみ。他の互換実装
   との組み合わせを妨げない。
 
+## Issue運用ルール
+
+- **振り分け基準**: spec配置の判断基準と同様、「host/client双方が従うべき
+  内容か」で判定する。
+  - プロトコル仕様(通信方向・認証方式・レポートJSONスキーマ等)の新設/変更/
+    議論、またはどちらの実装の問題か未確定な設計課題 → このリポジトリ
+    (Kagemiru)
+  - ホスト固有の実装(REST受信・DB保存・管理画面・死活監視Pull・host側crypto
+    実装等)のバグ/機能要望 → kagemiru-host
+  - クライアント固有の実装(セキュリティプラグイン検出・アダプタ・Push送信・
+    client側crypto実装等)のバグ/機能要望(新規アダプタ追加を含む) →
+    kagemiru-client
+- **host/client双方に影響する変更(3本立て)**: `spec/data-schema.md` の変更
+  のように、host/client双方の実装に影響する変更は以下の3本で管理する。
+  1. `kagemiru-host` / `kagemiru-client` それぞれに実装Issueを立てる
+  2. `Kagemiru` に全体要件Issueを立て、本文にチェックリスト形式で両Issueを
+     参照する(`- [ ] J-KEI/kagemiru-host#N` の形式。参照先がクローズされると
+     GitHubの Tracked issues 機能により自動でチェックが付く)
+  3. host/client側の各Issueには、コメントで対応するKagemiru側の全体要件
+     Issueへの参照(例:「関連: J-KEI/Kagemiru#N」)を追記し、双方向にリンク
+     させる
+- **クローズ時の連携(手動運用)**: 上記3本立てで連携しているIssueについて、
+  host/client側のIssueをクローズする際は、そのIssueが参照している
+  Kagemiru側の全体要件Issueに対して、クローズした旨を状況コメントとして
+  投稿すること(例:「kagemiru-host#N をクローズしました」)。GitHub Actions
+  等による自動化は行わず、Issueをクローズする作業を行うAIエージェント/
+  開発者が都度手動でコメントする運用とする。
+  全体要件Issue自体のクローズは、host/client双方のIssueの完了を確認した上で
+  人間が判断する(自動クローズはしない)。
+
 ## 開発時の注意(両リポジトリ共通)
 
 - クライアント側からホストへの通信は必ずPush型(`wp_remote_post`)を維持する。
